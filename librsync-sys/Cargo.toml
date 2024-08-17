@@ -19,4 +19,5 @@ path = "lib.rs"
 libc = "0.2"
 
 [build-dependencies]
+cmake = { path = "../../cmake-rs" }
 cc = "1.0"
