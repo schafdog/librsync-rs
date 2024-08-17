@@ -7,6 +7,10 @@ fn main() {
     let target = env::var("TARGET").unwrap();
     let windows = target.contains("windows");
 
+    println!("cmake configure");
+
+    let _dst = cmake::Config::new("librsync").only_configure(true).no_build_target(true).build();
+
     let mut cfg = cc::Build::new();
 
     if windows {
@@ -23,8 +27,9 @@ fn main() {
         .include("librsync/static")
         .include("librsync/src")
         .include("librsync/src/blake2")
-        .define("STDC_HEADERS", Some("1"))
+	.define("STDC_HEADERS", Some("1"))
         .define("LIBRSYNC_STATIC_DEFINE", Some("1"))
+	.flag("-Wno-sign-compare")
         .file("librsync/src/base64.c")
         .file("librsync/src/buf.c")
         .file("librsync/src/checksum.c")
@@ -42,11 +47,11 @@ fn main() {
         .file("librsync/src/netint.c")
         .file("librsync/src/patch.c")
         .file("librsync/src/prototab.c")
+        .file("librsync/src/rabinkarp.c")
         .file("librsync/src/readsums.c")
         .file("librsync/src/rollsum.c")
         .file("librsync/src/scoop.c")
         .file("librsync/src/stats.c")
-        .file("librsync/src/stream.c")
         .file("librsync/src/sumset.c")
         .file("librsync/src/trace.c")
         .file("librsync/src/tube.c")
@@ -55,4 +60,5 @@ fn main() {
         .file("librsync/src/whole.c")
         .file("librsync/src/blake2/blake2b-ref.c")
         .compile("librsync.a");
+    println!("cc finished!!");
 }
